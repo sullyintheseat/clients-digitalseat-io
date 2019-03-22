@@ -83,22 +83,6 @@ app.use('/cdn', express.static(__dirname + '/cdn') );
 
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('/app', (req, res, next) => {
-  res.sendfile(path.resolve('./wwwroot/index.html'));
-});
-
-app.use('/app/*', (req, res, next) => {
-  res.sendfile(__dirname + '/wwwroot/index.html');
-});
-
-
-
-app.get('/:id', (req, res)=> {
-  if(Boolean(req.params.id)){
-    res.header('drv', req.params.id);
-    res.status(301).redirect(`/ad/${req.params.id}`)
-  } 
-})
 
 
 
