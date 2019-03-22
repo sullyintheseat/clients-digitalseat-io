@@ -1,0 +1,17 @@
+html, body { font-family: Gotham, Lato, "Helvetica Neue",Helvetica,Arial,sans-serif; 
+  width:100%; 
+  padding:0px; 
+  margin:0px; 
+  background-color: #e8e7e8;  
+  color:#000; 
+  font-weight: 600; 
+  font-size:18px 100%;
+}
+h2 { font-weight:300;}
+h1 { font-weight:300;}
+h3 {color:#000; margin:0px 0px 8px 0px; padding:0px;}
+
+.displayOn { display:block; visibility:visible; }
+.displayOff { display:none; visibility:hidden; }
+
+.centered { width:100%; text-align: center; }
