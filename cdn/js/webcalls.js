@@ -33,9 +33,46 @@ function getData(op, cb) {
     });
 };
 
+function getDataWithAuth(op, cb) {
+    $.ajax({
+        type: "GET",
+        url: op,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        headers: {"token": localStorage.getItem('xyzzy').token},
+        success: function(data) {
+            cb(true, data);
+        },
+        error: function(err) {
+            cb(false, "error");
+        }
+    });
+};
+
+function postDataWithAuth(mdata, purl, callback, done) {
+    $.ajax({
+        url: purl,
+        type: 'POST',
+        data: JSON.stringify(mdata),
+        contentType: "application/json; charset=utf-8",
+        headers: {"token": localStorage.getItem('xyzzy').token},
+        
+        dataType: "json",
+        processData: false,
+        context: this,
+        success: function(data) {
+            callback(true, data);
+        },
+        error: function(err) {
+            callback(false, 'User Not Found' )
+        },
+        complete: function(data) { 
+            done();
+        }
+    });
+};
 
 function postData(mdata, purl, callback, done) {
-    var success = false;
     $.ajax({
         url: purl,
         type: 'POST',
@@ -48,14 +85,12 @@ function postData(mdata, purl, callback, done) {
             callback(true, data);
         },
         error: function(err) {
-            callback(false, err )
+            callback(false, 'User Not Found' )
         },
         complete: function(data) { 
             done();
         }
     });
-
-
 };
 
 

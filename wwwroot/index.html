@@ -11,10 +11,100 @@
     <script src="/cdn/js/cookies.js"></script>
     <script src="/cdn/js/libs/moment.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato%3A400%2C300italic%2C300%2C400italic%2C500%2C500italic%2C700%2C700italic%2C900%2C900italic&subset=latin%2Ccyrillic-ext&ver=1.0.1" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Roboto:300,400|Material+Icons" rel="stylesheet"> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/style/app.css" />
   </head>
+
   <body>
-    web page
+    <div>
+      <div class="header">
+        <div class="black_50"></div>
+        <div class="grey_25"></div>
+        <div class="container">
+          <div class="row">
+            <img src="/imgs/dslogo.jpg" class="dslogo" onclick="main()">
+          </div>
+        </div>
+      </div>
+      <div id="content-main">
+        <div class="container displayOn" id="loginMain">
+            <div class="row">
+              <div class="col-xs-12 col-sm-8 col-sm-offset-2 centered">
+                <div id="loginBox">
+                  <div id="loginContainer">
+                    <h1>SIGN IN</h1>
+                    <br/>
+                    <div class="input-group input-group-lg" style="margin:0 15%;"> 
+                      <input type="text" class="form-control"  id="username" placeholder="USER NAME" aria-describedby="basic-addon1">
+                      <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-lock"></i></span>
+                    </div>
+                    <br/>
+                    <div class="input-group input-group-lg" style="margin:0 15%;">
+                      <input type="password" class="form-control" id="password" placeholder="PASSWORD" aria-describedby="basic-addon1">
+                      <span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-lock"></i></span>
+                    </div>
+                    <br/>
+                    <div style="margin:0 15%;" class="centered">
+                      <button type="button" class="btn btn-orange btn-lg btn-block centered" onclick="login()">LOGIN</button>
+                    </div>              
+                    <br/><br/>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
   </body>
+  <script type="text/javascript">
+    let profile;
+
+    $(document).ready(function(e){
+      init();
+    });
+
+    init = () => {
+      profile = localStorage.getItem('xyzzy');
+      console.log(profile);
+    };
+
+    main = () => {
+      
+    };
+
+    login = () => {
+      let user = $('#username').val();
+      let pass = $('#password').val();
+      let data = {username: user, password: pass};
+    
+      postData(data, 'https://rsapi.digitalseat.io/accountsettings/client/login', (success, data) => {
+        if(success){
+          console.log(data);
+          profile = data;
+          localStorage.setItem('xyzzy', JSON.stringify(profile));
+
+          postDataWithAuth({spot: {$in: ['texas_live','EXTERNAL_TEXAS_LIVE','EXTERNAL_TEXAS_LIVE_ST_PATTY']}},'http://localhost:3300/v1/metrics/forclient', (asuccess, adata) => {
+            if(asuccess){
+              console.log(adata);
+            } else {
+              alert('User not found');
+            }
+          }, () => {});
+
+        } else {
+          alert('User not found');
+        }
+      }, ()=> {})
+
+      
+    };
+
+
+    backToLogin = () => {
+
+    };
+
+  </script>
+
 </html>
