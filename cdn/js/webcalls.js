@@ -117,6 +117,14 @@ function showPanel(panel){
     $('#' + panel).addClass('displayOn');
 }
 
+function showPanelFor(panel, panels){
+    for(var i = 0; i < panels.length; i++){
+        $('#' + panels[i]).removeClass('displayOn');
+        $('#' + panels[i]).addClass('displayOff');
+    };
+    $('#' + panel).removeClass('displayOff');
+    $('#' + panel).addClass('displayOn');
+}
 function setContent(src, data, target) {
     var source = $('#'+src).html();
     var template = Handlebars.compile(source);

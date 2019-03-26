@@ -28,6 +28,7 @@
         </div>
       </div>
       <div id="content-main">
+
         <div class="container displayOn" id="loginMain">
             <div class="row">
               <div class="col-xs-12 col-sm-8 col-sm-offset-2 centered">
@@ -54,11 +55,50 @@
               </div>
             </div>
         </div>
+
+        <div id="clientScreen" class="displayOff">
+          <div class="container" >
+            <div class="row">
+              <div class="col-xs-12">
+                <h3>Welcome Texas Live</h3>
+              </div>
+              <div style="width:100%; min-width:1140px; margin: 0px auto;">
+                <div style="width:1140px; margin-top:64px; border:solid 1px #333;" id="dataOut">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
       </div>
     </div>
+
+    <script type="text/x-handlebars" id="dataOut-template">
+      <div style="width:100%; clear:both; min-width:1140px;">
+        <div style="width:260px; float:left;">Time</div>
+        <div style="float:left; width:220px;">Driver</div>
+        <div style="float:left; width:220px;">IP</div>
+        <div style="width:220px; float:left;">Action</div>      
+      </div>
+      <div style="min-width:1140px; height:480px; overflow: scroll;">
+        {{#data}}
+          <div style="width:100%; clear:both; min-width:1140px;">
+            <div style="width:260px; float:left;">{{createdAt}}</div>
+            <div style="float:left; width:220px;">{{driverId}}</div>
+            <div style="float:left; width:220px;">{{origin}}</div>
+            <div style="width:220px; float:left;">{{spot}}</div>      
+          </div>
+        {{/data}}
+      </div>
+    </script>
   </body>
   <script type="text/javascript">
+    const vm = this;
+
     let profile;
+    let alldata;
+    
+    let panels = ['loginMain', 'clientScreen'];
 
     $(document).ready(function(e){
       init();
@@ -66,40 +106,55 @@
 
     init = () => {
       profile = localStorage.getItem('xyzzy');
-      console.log(profile);
+      if(profile === null) {
+        alert('null')
+      } else {
+        let query = {spot: {$in: ['texas_live','EXTERNAL_TEXAS_LIVE','EXTERNAL_TEXAS_LIVE_ST_PATTY']}};
+        postData(query,'https://rsapi.digitalseat.io/v1/metrics/forclient', (asuccess, adata) => {
+          if(asuccess){
+            loggedin(adata);
+          } else {
+            alert('data not found');
+          }
+        },() => {});
+      }
     };
 
     main = () => {
       
     };
 
-    login = () => {
+    function login (){
+      
       let user = $('#username').val();
       let pass = $('#password').val();
       let data = {username: user, password: pass};
     
       postData(data, 'https://rsapi.digitalseat.io/accountsettings/client/login', (success, data) => {
         if(success){
-          console.log(data);
+          let query = {spot: {$in: ['texas_live','EXTERNAL_TEXAS_LIVE','EXTERNAL_TEXAS_LIVE_ST_PATTY']}};
           profile = data;
           localStorage.setItem('xyzzy', JSON.stringify(profile));
-
-          postDataWithAuth({spot: {$in: ['texas_live','EXTERNAL_TEXAS_LIVE','EXTERNAL_TEXAS_LIVE_ST_PATTY']}},'http://localhost:3300/v1/metrics/forclient', (asuccess, adata) => {
+          
+          postData(query,'https://rsapi.digitalseat.io/v1/metrics/forclient', (asuccess, adata) => {
             if(asuccess){
-              console.log(adata);
+              loggedin(adata);
             } else {
-              alert('User not found');
+              alert('data not found');
             }
-          }, () => {});
+          },() => {});
 
         } else {
           alert('User not found');
         }
-      }, ()=> {})
-
-      
+      }, () => {});
     };
 
+    function loggedin(data) {
+      alldata = data;
+      showPanelFor('clientScreen', panels);
+      setContent('dataOut-template', {data: alldata}, 'dataOut')
+    }
 
     backToLogin = () => {
 
