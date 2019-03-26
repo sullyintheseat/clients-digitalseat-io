@@ -107,7 +107,7 @@
     init = () => {
       profile = localStorage.getItem('xyzzy');
       if(profile === null) {
-        alert('null')
+        
       } else {
         let query = {spot: {$in: ['texas_live','EXTERNAL_TEXAS_LIVE','EXTERNAL_TEXAS_LIVE_ST_PATTY']}};
         postData(query,'https://rsapi.digitalseat.io/v1/metrics/forclient', (asuccess, adata) => {
